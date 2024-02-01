@@ -3,6 +3,16 @@
 ## Example ##
 - Client and Server Integration in Go lang using [http package](https://pkg.go.dev/net/http).
 
+- Implement REST services `[GET POST PUT DELETE]` in `Go` application using [gorilla/mux package](https://pkg.go.dev/github.com/gorilla/mux#section-readme).
+
+| Endpoint Url                          |      HTTP Method     |  HTTP Response       |
+|---------------------------------------|:--------------------:|---------------------:|
+| localhost:9999/test                   |  GET                 | JSON Dummy Data      |
+| localhost:9999/get-short-url          |  GET                 | JSON Dummy Data      |
+| localhost:9999/create-short-url       |  POST                | JSON Dummy Data      |
+| localhost:9999/update-short-url       |  PUT                 | JSON Dummy Data      |
+| localhost:9999/delete-short-url       |  DELETE              | JSON Dummy Data      |
+
 ## How to Run the sample `Go` Project ##
 
 * Clone the project.
