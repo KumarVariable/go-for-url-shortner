@@ -2,7 +2,6 @@
 
 ## Example ##
 - Client and Server Integration in Go lang using [http package](https://pkg.go.dev/net/http).
-
 - Implement REST services `[GET POST PUT DELETE]` in `Go` application using [gorilla/mux package](https://pkg.go.dev/github.com/gorilla/mux#section-readme).
 
 | Endpoint Url                          |      HTTP Method     |  HTTP Response       |
