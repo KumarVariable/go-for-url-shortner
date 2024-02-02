@@ -12,6 +12,8 @@
 | localhost:9999/update-short-url       |  PUT                 | JSON Dummy Data      |
 | localhost:9999/delete-short-url       |  DELETE              | JSON Dummy Data      |
 
+- Introduce and implement request / response interceptor [Middleware](https://pkg.go.dev/golang.org/x/pkgsite/internal/middleware) in `Go` application.
+
 ## How to Run the sample `Go` Project ##
 
 * Clone the project.
