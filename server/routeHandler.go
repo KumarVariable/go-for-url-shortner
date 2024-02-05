@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/KumarVariable/go-for-url-shortner/controllers"
-	"github.com/KumarVariable/go-for-url-shortner/middleware"
 	"github.com/KumarVariable/go-for-url-shortner/util"
 	"github.com/gorilla/mux"
 )
@@ -24,11 +23,8 @@ func SetUpRoutes() *mux.Router {
 
 	router := mux.NewRouter()
 
-	// use middleware to intercept request
-	router.Use(middleware.InterceptRequest)
-
-	router.MethodNotAllowedHandler = controllers.MethodNotAllowedHandler()
-	router.NotFoundHandler = controllers.RouteNotFoundHandler()
+	ConfigMiddleware(router)
+	ConfigureCustomHnadlers(router)
 
 	router.HandleFunc("/test", pingTest).Methods("GET")
 	router.HandleFunc("/get-short-url", controllers.GetShortUrl).Methods("GET")
@@ -36,9 +32,6 @@ func SetUpRoutes() *mux.Router {
 	router.HandleFunc("/update-short-url", controllers.UpdateShortUrl).Methods("PUT")
 
 	router.HandleFunc("/delete-short-url", controllers.DeleteShortUrl).Methods("DELETE")
-
-	// use middleware to intercept response
-	router.Use(middleware.InterceptResponse)
 
 	return router
 
