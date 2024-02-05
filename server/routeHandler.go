@@ -27,6 +27,9 @@ func SetUpRoutes() *mux.Router {
 	// use middleware to intercept request
 	router.Use(middleware.InterceptRequest)
 
+	router.MethodNotAllowedHandler = controllers.MethodNotAllowedHandler()
+	router.NotFoundHandler = controllers.RouteNotFoundHandler()
+
 	router.HandleFunc("/test", pingTest).Methods("GET")
 	router.HandleFunc("/get-short-url", controllers.GetShortUrl).Methods("GET")
 	router.HandleFunc("/create-short-url", controllers.CreateShortUrl).Methods("POST")

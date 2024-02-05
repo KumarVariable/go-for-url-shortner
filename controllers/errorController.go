@@ -4,6 +4,11 @@ import (
 	"net/http"
 )
 
+type ErrorResponse struct {
+	ErrCode int
+	ErrMsg  string
+}
+
 // Function to send error response to the client
 func sendErrorResponse(writer http.ResponseWriter, errorMsg string, errorCode int) {
 	http.Error(writer, errorMsg, errorCode)
