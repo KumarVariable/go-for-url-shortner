@@ -19,10 +19,12 @@ import (
 // the main function get executed first.
 func main() {
 
-	fmt.Println("initialize main function, run application")
+	fmt.Println("initialize and set up application")
 
 	server.HandleRequests()
-	server.StartHttpServer()
+	router := server.SetUpRoutes()
+
+	server.StartHttpServer(router)
 
 	stopServerListener()
 
