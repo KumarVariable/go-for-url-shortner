@@ -29,3 +29,18 @@
 - Use `Go` packages - `io`, `encoding/json`
 
 </ol>
+
+- Add middleware (interceptor ) in a `Go` application.
+
+<i>Topics Covered:</i>
+
+<ol>
+
+- A middleware allows to intercept any request or response in `Go`. This concept is kind of
+similar functionality of `Filters` in `Java` programming language. 
+- An example to demonstrate the implementation of `Request`, `Response` Interceptors in REST application .
+- Write your own custom `http.ResponseWriter` in current REST application. This response writer is
+use to log response data or details before writing to the standard Response Writer. 
+- Pass calls to multiple middlewares or we can say `Filter Chaining` concept in `Go` application
+
+</ol>
