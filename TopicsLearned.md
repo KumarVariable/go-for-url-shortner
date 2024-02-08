@@ -3,7 +3,7 @@
 
 ### Examples Summary
 
-- Client and Server Integration using `net/http` package
+- A sample hands-on learning to expose REST services using `Go` programming language.
 
 <i>Topics Covered:</i>
 
@@ -42,5 +42,17 @@ similar functionality of `Filters` in `Java` programming language.
 - Write your own custom `http.ResponseWriter` in current REST application. This response writer is
 use to log response data or details before writing to the standard Response Writer. 
 - Pass calls to multiple middlewares or we can say `Filter Chaining` concept in `Go` application
+
+</ol>
+
+- Integrate `Redis Database` in a `Go` application.
+
+<i>Topics Covered:</i>
+
+<ol>
+
+- Redis is in-memory data storage which is used as database. 
+- Use package [go-redis](https://github.com/redis/go-redis) to integrate in our golang application.
+- Implement REST services to Add, Get key(s) from locally running redis database.
 
 </ol>

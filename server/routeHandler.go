@@ -1,22 +1,11 @@
 package server
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-
 	"github.com/KumarVariable/go-for-url-shortner/controllers"
-	"github.com/KumarVariable/go-for-url-shortner/middleware"
-	"github.com/KumarVariable/go-for-url-shortner/util"
+	"github.com/KumarVariable/go-for-url-shortner/models"
 	"github.com/gorilla/mux"
+	"github.com/redis/go-redis/v9"
 )
-
-// Function to register the Handler/Endpoints
-// for given request URLs (pattern)
-func HandleRequests() {
-	http.HandleFunc("/test", pingTest)
-
-}
 
 // Function to register route(s), handlers using gorilla/mux.
 // mux - stands for HTTP request multiplexer.
@@ -24,33 +13,36 @@ func SetUpRoutes() *mux.Router {
 
 	router := mux.NewRouter()
 
-	// use middleware to intercept request
-	router.Use(middleware.InterceptRequest)
+	ConfigMiddleware(router)
+	ConfigureCustomHandlers(router)
 
-	router.HandleFunc("/test", pingTest).Methods("GET")
+	router.HandleFunc("/test", controllers.PingTest).Methods("GET")
 	router.HandleFunc("/get-short-url", controllers.GetShortUrl).Methods("GET")
 	router.HandleFunc("/create-short-url", controllers.CreateShortUrl).Methods("POST")
 	router.HandleFunc("/update-short-url", controllers.UpdateShortUrl).Methods("PUT")
-
 	router.HandleFunc("/delete-short-url", controllers.DeleteShortUrl).Methods("DELETE")
 
-	// use middleware to intercept response
-	router.Use(middleware.InterceptResponse)
+	router.HandleFunc("/get-key", controllers.GetKeyFromRedis).Methods("GET")
+	router.HandleFunc("/get-all-keys", controllers.GetAllKeysFromRedis).Methods("GET")
+	router.HandleFunc("/add-key", controllers.StoreKeyValue).Methods("POST")
 
 	return router
 
 }
 
-// Route handler to get Server Uptime
-func pingTest(w http.ResponseWriter, r *http.Request) {
+// Function to configure locally running redis server
+func SetUpRedis() *redis.Client {
 
-	log.Println("request received for ping test ")
+	redisOptions := redis.Options{
+		Addr:     GetRedisConfig().Address,
+		Password: GetRedisConfig().Password,
+		DB:       GetRedisConfig().Database,
+		PoolSize: GetRedisConfig().PoolSize,
+	}
 
-	serverUptime := util.GetServerUptime()
-	uptimeString := util.FormatDuration(serverUptime)
+	redisClient := redis.NewClient(&redisOptions)
+	models.RedisClient = redisClient
 
-	log.Println("response returned for ping test ", uptimeString)
+	return redisClient
 
-	// write response to Response Writer.
-	fmt.Fprintf(w, " server is running since : "+uptimeString)
 }

@@ -4,11 +4,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/KumarVariable/go-for-url-shortner/controllers"
 	"github.com/KumarVariable/go-for-url-shortner/server"
 )
 
@@ -20,12 +22,13 @@ import (
 func main() {
 
 	fmt.Println("initialize and set up application")
+	ctx := context.Background()
 
-	server.HandleRequests()
+	redisClient := server.SetUpRedis()
+	controllers.PingRedis(redisClient, ctx)
+
 	router := server.SetUpRoutes()
-
 	server.StartHttpServer(router)
-
 	stopServerListener()
 
 }

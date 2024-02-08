@@ -1,8 +1,8 @@
 # go-for-url-shortner
 
 ## Example ##
-- Client and Server Integration in Go lang using [http package](https://pkg.go.dev/net/http).
-- Implement REST services `[GET POST PUT DELETE]` in `Go` application using [gorilla/mux package](https://pkg.go.dev/github.com/gorilla/mux#section-readme).
+1) Client and Server Integration in Go lang using [http package](https://pkg.go.dev/net/http).
+2) Implement REST services `[GET POST PUT DELETE]` in `Go` application using [gorilla/mux package](https://pkg.go.dev/github.com/gorilla/mux#section-readme).
 
 | Endpoint Url                          |      HTTP Method     |  HTTP Response       |
 |---------------------------------------|:--------------------:|---------------------:|
@@ -12,11 +12,58 @@
 | localhost:9999/update-short-url       |  PUT                 | JSON Dummy Data      |
 | localhost:9999/delete-short-url       |  DELETE              | JSON Dummy Data      |
 
-- Introduce and implement request / response interceptor [Middleware](https://pkg.go.dev/golang.org/x/pkgsite/internal/middleware) in `Go` application.
+3) Introduce and implement request / response interceptor [Middleware](https://pkg.go.dev/golang.org/x/pkgsite/internal/middleware) in `Go` application.
+
+4) Integrate Redis database using [go-redis](https://github.com/redis/go-redis) package into `golang` application.
+
+| Endpoint Url                |    HTTP Method  |  HTTP Response      |
+|-----------------------------|:---------------:|--------------------:|
+| localhost:9999/get-key      |  GET            | JSON Dummy Data     |
+| localhost:9999/get-all-keys |  GET            | JSON Dummy Data     |
+| localhost:9999/add-key      |  POST           | JSON Dummy Data     |
+
+Sample cURL calls:
+
+Get Key
+
+```text
+curl --location --request GET 'http://localhost:9999/get-key' \
+--header 'Content-Type: application/json' \
+--data '{
+    "longUrl" : "dbEntry2"
+}'
+```
+
+Get All Keys
+
+```text
+curl --location 'http://localhost:9999/get-all-keys'
+```
+
+Add Key
+
+```text
+curl --location 'http://localhost:9999/add-key' \
+--header 'Content-Type: application/json' \
+--data '{
+    "longUrl" : "dbEntry2"
+}'
+```
+## Prerequisite ##
+
+1. [Go](https://go.dev/doc/install)
+2. [Redis](https://redis.io/docs/install/install-redis/)
+
+<strong>NOTE: </strong>
+This example is done based on legacy authentication method for redis database.<br/>
+Edit the setting `requirepass` available in `redis.conf` file.<br/>
+Keep Password property inside `server/redisConfig.go` file as empty, if the local running redis set up does not require any authentication.
+
 
 ## How to Run the sample `Go` Project ##
 
 * Clone the project.
+* Redis is installed and the service is up and running.
 * Run command from terminal `go build .` to build the project. 
 * Run command from terminal `go run .` to run the application or use your IDE to start `main.go` in `debug or non-debug` mode. 
 * Open Browser, Run url `http://localhost:9999/test` to test the server is up and running.

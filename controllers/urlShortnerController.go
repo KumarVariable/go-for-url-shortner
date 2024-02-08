@@ -44,10 +44,11 @@ func GetShortUrl(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 
+	// encode and send the response data
 	err = json.NewEncoder(writer).Encode(requestData)
 	if err != nil {
 		errorCode := http.StatusInternalServerError
-		log.Printf("Error encoding create short url response: %v", err)
+		log.Printf("Error encoding get short url response: %v", err)
 		SendServerErrResponse(writer, err.Error(), errorCode)
 		return
 	}
