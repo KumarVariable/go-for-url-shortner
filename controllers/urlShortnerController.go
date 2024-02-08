@@ -9,41 +9,6 @@ import (
 	"github.com/KumarVariable/go-for-url-shortner/models"
 )
 
-// Function to handle when request method is not
-// matched with any of known routes
-func MethodNotAllowedHandler() http.Handler {
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		errResponse := ErrorResponse{
-			ErrCode: http.StatusMethodNotAllowed,
-			ErrMsg:  "Method not allowed",
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(errResponse)
-
-	})
-
-}
-
-// Function to handle when no route URL is matched
-func RouteNotFoundHandler() http.Handler {
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		errResponse := ErrorResponse{
-			ErrCode: http.StatusNotFound,
-			ErrMsg:  "Service not found",
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(errResponse)
-
-	})
-
-}
-
 // Route handler to get short url for long url
 func GetShortUrl(writer http.ResponseWriter, request *http.Request) {
 
@@ -79,10 +44,11 @@ func GetShortUrl(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 
+	// encode and send the response data
 	err = json.NewEncoder(writer).Encode(requestData)
 	if err != nil {
 		errorCode := http.StatusInternalServerError
-		log.Printf("Error encoding create short url response: %v", err)
+		log.Printf("Error encoding get short url response: %v", err)
 		SendServerErrResponse(writer, err.Error(), errorCode)
 		return
 	}

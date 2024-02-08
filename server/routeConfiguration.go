@@ -16,7 +16,7 @@ func ConfigMiddleware(router *mux.Router) {
 }
 
 // Function to configure custom handlers for Router
-func ConfigureCustomHnadlers(router *mux.Router) {
+func ConfigureCustomHandlers(router *mux.Router) {
 
 	router.MethodNotAllowedHandler = controllers.MethodNotAllowedHandler()
 	router.NotFoundHandler = controllers.RouteNotFoundHandler()
