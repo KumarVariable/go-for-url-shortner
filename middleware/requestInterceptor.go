@@ -83,3 +83,29 @@ func (logResponse *logResponseWriterStruct) WriteHeader(statusCode int) {
 	logResponse.ResponseWriter.WriteHeader(statusCode)
 
 }
+
+func SetUpCorsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+
+		origin := request.Header.Get("origin")
+
+		log.Println(" cors middleware executes for origin :: ", origin)
+
+		if origin == "http://127.0.0.1:3000" || origin == "http://localhost:3000" {
+			log.Println(" inside if origin ")
+			writer.Header().Set("Access-Control-Allow-Origin", origin)
+		}
+
+		// writer.Header().Set("Access-Control-Allow-Origin", "*")
+		writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+		if request.Method == "OPTIONS" {
+			log.Println("........  Pre flight options requests ......")
+			writer.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(writer, request)
+
+	})
+}

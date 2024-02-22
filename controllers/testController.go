@@ -1,3 +1,6 @@
+// This source file contains functions to test redis database
+// operations.
+
 package controllers
 
 import (
@@ -27,7 +30,7 @@ func PingTest(w http.ResponseWriter, r *http.Request) {
 	log.Println("response returned for ping test ", uptimeString)
 }
 
-// Function to test the redis connection
+// Function to verify the connection with the locally running Redis instance.
 func PingRedis(redisClient *redis.Client, ctx context.Context) {
 
 	con, err := redisClient.Ping(ctx).Result()
@@ -38,7 +41,7 @@ func PingRedis(redisClient *redis.Client, ctx context.Context) {
 
 }
 
-// Function to store key into redis database
+// Router to add/store a key into the Redis database.
 func StoreKeyValue(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("request received to add key-value in redis")
@@ -80,7 +83,7 @@ func StoreKeyValue(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// Function to retrieve multiple(all) keys stored in redis server
+// Router to retrieve all keys (multiple) from redis database
 func GetAllKeysFromRedis(w http.ResponseWriter, r *http.Request) {
 
 	var responseBody []byte
@@ -89,6 +92,7 @@ func GetAllKeysFromRedis(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	redisClient := models.RedisClient
 
+	// close the request after execution of function
 	defer r.Body.Close()
 
 	// Use the Keys method with the pattern "*" to get all keys
@@ -104,7 +108,7 @@ func GetAllKeysFromRedis(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < len(keys); i++ {
 
 			redisData := models.Payload{}
-			redisData.KeyId = keys[i]
+			redisData.KeyName = keys[i]
 
 			data = append(data, redisData)
 
@@ -140,7 +144,7 @@ func GetAllKeysFromRedis(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// Function to get key from redis server
+// Router to retrieve key for longUrl from redis database
 func GetKeyFromRedis(w http.ResponseWriter, r *http.Request) {
 
 	var reqData models.Payload
@@ -157,8 +161,9 @@ func GetKeyFromRedis(w http.ResponseWriter, r *http.Request) {
 
 	result, err := redisClient.Get(ctx, reqData.LongUrl).Result()
 	if err != nil {
-		errorCode := http.StatusInternalServerError
-		sendErrorResponse(w, err.Error(), errorCode)
+		errorCode := http.StatusNotFound
+		errMsg := "Could not find key in the system"
+		sendErrorResponse(w, errMsg, errorCode)
 		return
 	}
 
