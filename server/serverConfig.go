@@ -65,5 +65,7 @@ func startServer(router *mux.Router) {
 		log.Panic("Failed to start server on address: ", GetHttpServerConfig().Address, " , Error:", error)
 	}
 
+	log.Printf(" The HTTP server is operational on port %d and can be accessed at the address %s", GetHttpServerConfig().Port, GetHttpServerConfig().Address)
+
 	util.SERVER_STARTED_AT = time.Now()
 }

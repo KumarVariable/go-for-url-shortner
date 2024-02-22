@@ -13,6 +13,9 @@ func ConfigMiddleware(router *mux.Router) {
 
 	// use middleware to intercept response
 	router.Use(middleware.InterceptResponse)
+
+	// use middleware to handle CORS policy
+	router.Use(middleware.SetUpCorsMiddleware)
 }
 
 // Function to configure custom handlers for Router
