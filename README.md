@@ -1,64 +1,26 @@
-# go-for-url-shortner
+# ProjectName: A URL Shortener Application
 
-## Example ##
-1) Client and Server Integration in Go lang using [http package](https://pkg.go.dev/net/http).
-2) Implement REST services `[GET POST PUT DELETE]` in `Go` application using [gorilla/mux package](https://pkg.go.dev/github.com/gorilla/mux#section-readme).
+<span id="top"></span>
 
-| Endpoint Url                          |      HTTP Method     |  HTTP Response       |
-|---------------------------------------|:--------------------:|---------------------:|
-| localhost:9999/test                   |  GET                 | JSON Dummy Data      |
-| localhost:9999/get-short-url          |  GET                 | JSON Dummy Data      |
-| localhost:9999/create-short-url       |  POST                | JSON Dummy Data      |
-| localhost:9999/update-short-url       |  PUT                 | JSON Dummy Data      |
-| localhost:9999/delete-short-url       |  DELETE              | JSON Dummy Data      |
+ ## Design and Implement URL shortner application. ##
 
-3) Introduce and implement request / response interceptor [Middleware](https://pkg.go.dev/golang.org/x/pkgsite/internal/middleware) in `Go` application.
+<p>
 
-4) Integrate Redis database using [go-redis](https://github.com/redis/go-redis) package into `golang` application.
+This application provides a simple solution for shortening URLs.Developed using Golang, it exposes REST services to perform operations related to URL shortner application.The application is integrated with `Redis` as the database to store mappings between shortened URLs and their original long URLs.
 
-| Endpoint Url                |    HTTP Method  |  HTTP Response      |
-|-----------------------------|:---------------:|--------------------:|
-| localhost:9999/get-key      |  GET            | JSON Dummy Data     |
-| localhost:9999/get-all-keys |  GET            | JSON Dummy Data     |
-| localhost:9999/add-key      |  POST           | JSON Dummy Data     |
+This application is a learning tool to understand `golang` programming concepts.
 
-Sample cURL calls:
+The REST services can be test through [cURL calls](#how-to-test-rest-services-for-url-shortner-application) or, any API Test tool.<br/>
 
-Get Key
+Also, a sample front-end applicatin is also written in React to get the feel for complete development for URL shortner application
 
-```text
-curl --location --request GET 'http://localhost:9999/get-key' \
---header 'Content-Type: application/json' \
---data '{
-    "longUrl" : "dbEntry2"
-}'
-```
+</p>
 
-Get All Keys
-
-```text
-curl --location 'http://localhost:9999/get-all-keys'
-```
-
-Add Key
-
-```text
-curl --location 'http://localhost:9999/add-key' \
---header 'Content-Type: application/json' \
---data '{
-    "longUrl" : "dbEntry2"
-}'
-```
 ## Prerequisite ##
 
 1. [Go](https://go.dev/doc/install)
 2. [Redis](https://redis.io/docs/install/install-redis/)
-
-<strong>NOTE: </strong>
-This example is done based on legacy authentication method for redis database.<br/>
-Edit the setting `requirepass` available in `redis.conf` file.<br/>
-Keep Password property inside `server/redisConfig.go` file as empty, if the local running redis set up does not require any authentication.
-
+3. Your Favorite IDE. I have used [Visual Studio Code Editor](https://code.visualstudio.com/download)
 
 ## How to Run the sample `Go` Project ##
 
@@ -67,9 +29,89 @@ Keep Password property inside `server/redisConfig.go` file as empty, if the loca
 * Run command from terminal `go build .` to build the project. 
 * Run command from terminal `go run .` to run the application or use your IDE to start `main.go` in `debug or non-debug` mode. 
 * Open Browser, Run url `http://localhost:9999/test` to test the server is up and running.
-* Change/modify the desired port number if you wish. Refer function `StartHttpServer()` at [Server Configuration](server/serverConfig.go).
+* Change/modify the desired port number if you wish. Refer function `GetHttpServerConfig()` at [Server Configuration](server/serverConfig.go).
 * Use command `Ctrl+C` or `Stop` from IDE to shutdown server.
 
+## How To Test Your Redis Database ##
+
+| Endpoint Url                    | HTTP Method  |  HTTP Response                                   |
+|---------------------------------|:------------:|-------------------------------------------------:|
+| localhost:9999/key/get-key      |  GET         | Get unique key for long url from redis database  |
+| localhost:9999/key/get-all-keys |  GET         | Get all keys (multiple) from redis database      |
+| localhost:9999/key/add-key      |  POST        | Add or store a redis key into the database       |
+
+Sample cURL calls:
+
+1. Add Key into Redis
+
+```text
+curl --location 'http://127.0.0.1:9999/key/add-key' \
+--header 'Content-Type: application/json' \
+--data '{
+    "KeyName" : "this is just a test key"
+}'
+```
+
+2. Get Key From Redis
+
+```text
+curl --location --request GET 'localhost:9999/key/get-key' \
+--header 'Content-Type: application/json' \
+--data '{
+    "KeyName" : "MyTestKey"
+}'
+```
+
+3. Gell All Keys From Redis
+
+```text
+curl --location 'localhost:9999/key/get-all-keys'
+```
+
+## How To Test REST services for Url Shortner Application ##
+
+| Endpoint Url                          |   HTTP Method  |  HTTP Response    |
+|---------------------------------------|:--------------:|------------------:|
+| localhost:9999/test                   |  GET           | Server Uptime     |
+| localhost:9999/urls/get-short-url     |  GET           | Get short url     |
+| localhost:9999/urls/create-short-url  |  POST          | Create short url  |
+| localhost:9999/urls/update-short-url  |  POST          | Update short url  |
+| localhost:9999/urls/delete-short-url  |  GET           | Delete short url  |
+
+Sample cuRL calls:
+
+1. Create Short Url
+
+```text
+curl --location 'localhost:9999/urls/create-short-url' \
+--header 'Content-Type: application/json' \
+--data '{
+    "longUrl" : "https://go.dev/doc/tutorial/getting-started#code"
+}'
+```
+2. Get Short Url
+
+```text
+curl --location --request GET 'http://localhost:9999/urls/get-short-url?longUrl=https%3A%2F%2Fgo.dev%2Fdoc%2Ftutorial%2Fgetting-started%23code' \
+--header 'Content-Type: application/json'
+```
+
+3. Update Short Url
+
+```text
+curl --location 'http://localhost:9999/urls/update-short-url' \
+--header 'Content-Type: application/json' \
+--data '{
+    "longUrl" : "https://go.dev/doc/tutorial/getting-started#code"
+}'
+```
+
+4. Delete Short Url
+
+```text
+curl --location --request GET 'http://localhost:9999/urls/delete-short-url?longUrl=https%3A%2F%2Fgo.dev%2Fdoc%2Ftutorial%2Fgetting-started%23code' \
+--header 'Content-Type: application/json'
+```
 
 ## Basic Go Commands ##
 1. Command to check `Go` is installed on your machine.
@@ -138,4 +180,37 @@ go run .
 ```text
 go mod tidy
 ```
+## Basic Redis CLI Commands ##
 
+To start redis-client or Redis command line interface. Redis client is available in Redis package that will be installed when we install `Redis` on our machine.
+
+```text
+redis-cli
+```
+
+- Use `CONFIG GET databases` command to know the number of databases.
+- Use `INFO keyspace` command to list the databases that contains keys.
+
+![RedisCli|480x250, 75%](docs/images/redis_cli.png)
+
+- Use `SELECT <index>` command to select the database based on zero-index. Default is 0.
+- Use `FLUSHDB` command to clear currently active database.
+- Use `FLUSHALL` command to clear all the existing database.
+- Use `SCAN <cursor>` command to iterate the set of keys into selected Redis database.
+
+![RedisCli1|480x250, 75%](docs/images/redis_cli1.png)
+
+- Use `SET <key-name> <key-value>` command to create a key with value in redis database.
+- Use `GET <key-name>` command to get the stored value for corresponding key in redis database.
+
+![RedisCli2|480x250, 75%](docs/images/redis_cli2.png)
+
+- Use `KEYS *` command to list all keys stored in redis database.
+- Use `SCAN <cursor>` command as an alternative for `KEYS` command.Better option.
+
+![RedisCli3|480x250, 75%](docs/images/redis_cli3.png)
+
+
+**Happy Learning !**
+
+[⬆ Back to Top](#top)

@@ -38,6 +38,8 @@ func IncrementCounter(redisClient *redis.Client, ctx context.Context) int64 {
 
 }
 
+// Function to check whether the mapping for long url and short url
+// already exists in redis database.
 func IsShortUrlExistsForLongUrl(redisClient *redis.Client, ctx context.Context, payload *models.Payload) bool {
 
 	indexKey := fmt.Sprintf(util.REDIS_KEY_TO_STORE_LONG_URL_ID+":%s", payload.LongUrl)

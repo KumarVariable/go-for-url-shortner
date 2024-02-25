@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/KumarVariable/go-for-url-shortner/util"
 	"github.com/gorilla/mux"
 )
 
@@ -48,6 +47,7 @@ func StartHttpServer(router *mux.Router) {
 
 }
 
+// Start HTTP server
 func startServer(router *mux.Router) {
 
 	// ListenAndServe() is a blocking call. This means that the function
@@ -66,6 +66,4 @@ func startServer(router *mux.Router) {
 	}
 
 	log.Printf(" The HTTP server is operational on port %d and can be accessed at the address %s", GetHttpServerConfig().Port, GetHttpServerConfig().Address)
-
-	util.SERVER_STARTED_AT = time.Now()
 }

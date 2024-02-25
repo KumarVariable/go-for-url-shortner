@@ -84,27 +84,41 @@ func (logResponse *logResponseWriterStruct) WriteHeader(statusCode int) {
 
 }
 
+// Function to integrate basic CORS support into HTTP services.
+// This is to ensure that our application can handle requests
+// from different origins securely, specifically tailored
+// for web applications.
 func SetUpCorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 
 		origin := request.Header.Get("origin")
+		log.Println(" origin of the incoming HTTP request: ", origin)
 
-		log.Println(" cors middleware executes for origin :: ", origin)
-
+		// allow for only known origin - a webapp application to create short url
 		if origin == "http://127.0.0.1:3000" || origin == "http://localhost:3000" {
 			log.Println(" inside if origin ")
 			writer.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 
+		// uncomment below if you want to allow for all origins
 		// writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+		// specify the allowed HTTP methods
 		writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+
+		// indicate which headers can be included in the requests
 		writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
+		// handle pre-flight(OPTIONS methos) request
+		// Helps to validate that the server accepts request from incoming Origin,
+		// and the services are accessible from external code or domain.
 		if request.Method == "OPTIONS" {
 			log.Println("........  Pre flight options requests ......")
 			writer.WriteHeader(http.StatusOK)
 			return
 		}
+
+		// next handler to execute in the middleware chain.
 		next.ServeHTTP(writer, request)
 
 	})

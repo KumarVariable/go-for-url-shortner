@@ -51,6 +51,7 @@ func StoreKeyValue(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	redisClient := models.RedisClient
 
+	// close the request body after function execution
 	defer r.Body.Close()
 
 	err := json.NewDecoder(r.Body).Decode(&payload)
@@ -59,11 +60,19 @@ func StoreKeyValue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if payload.KeyName == "" {
+		log.Println("missing required parameter : KeyName")
+		errMessage := "missing required parameter : KeyName"
+		sendErrorResponse(w, errMessage, http.StatusBadRequest)
+		return
+	}
+
 	// set key,values, expiration time.
 	// expiration time as 0 is to set the key with no expiration time
-	err = redisClient.Set(ctx, payload.LongUrl, payload.LongUrl, 0).Err()
+	err = redisClient.Set(ctx, "MyTestKey", payload.KeyName, 0).Err()
 	if err != nil {
 		log.Println("could not add entry into redis database ", err.Error())
+		payload.Message = "could not add entry into redis database "
 	} else {
 		log.Println("entry created into redis database ")
 		payload.Message = "entry created :" + strconv.Itoa(http.StatusCreated)
@@ -152,6 +161,9 @@ func GetKeyFromRedis(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	redisClient := models.RedisClient
 
+	// close request body after function execution
+	defer r.Body.Close()
+
 	err := json.NewDecoder(r.Body).Decode(&reqData)
 	if err != nil {
 		errorCode := http.StatusInternalServerError
@@ -159,7 +171,14 @@ func GetKeyFromRedis(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := redisClient.Get(ctx, reqData.LongUrl).Result()
+	if reqData.KeyName == "" {
+		log.Println("missing required parameter : KeyName")
+		errMessage := "missing required parameter : KeyName"
+		sendErrorResponse(w, errMessage, http.StatusBadRequest)
+		return
+	}
+
+	result, err := redisClient.Get(ctx, reqData.KeyName).Result()
 	if err != nil {
 		errorCode := http.StatusNotFound
 		errMsg := "Could not find key in the system"
@@ -167,9 +186,8 @@ func GetKeyFromRedis(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("response :::  ", result)
-
-	reqData.ShortUrl = result
+	fmt.Printf("get key response for key %s %s ", reqData.KeyName, result)
+	reqData.Message = result
 
 	w.Header().Set("Content-Type", "application-json")
 	w.WriteHeader(http.StatusOK)
