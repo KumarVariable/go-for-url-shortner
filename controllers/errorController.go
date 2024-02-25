@@ -74,5 +74,4 @@ func RouteNotFoundHandler() http.Handler {
 		json.NewEncoder(w).Encode(errResponse)
 
 	})
-
 }

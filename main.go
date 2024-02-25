@@ -9,9 +9,11 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/KumarVariable/go-for-url-shortner/controllers"
 	"github.com/KumarVariable/go-for-url-shortner/server"
+	"github.com/KumarVariable/go-for-url-shortner/util"
 )
 
 // main() serves as the entry point of the executable program. In Go,
@@ -23,6 +25,8 @@ import (
 func main() {
 
 	fmt.Println("initialize and set up application")
+
+	util.SERVER_STARTED_AT = time.Now()
 	ctx := context.Background()
 
 	redisClient := server.SetUpRedis()
