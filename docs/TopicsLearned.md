@@ -3,7 +3,7 @@
 
 ### Overview of My Learning 📘 ###
 
-- **Client and Server Integration in Go lang using** [http package](https://pkg.go.dev/net/http).
+## Client and Server Integration in Go lang using [http package](https://pkg.go.dev/net/http). ##
 
 <i>Topics Covered</i>: Implement REST services using [gorilla/mux package](https://pkg.go.dev/github.com/gorilla/mux#section-readme).
 
@@ -17,7 +17,7 @@
 
 </ol>
 
-- **Introduce and implement request / response interceptor [Middleware](https://pkg.go.dev/golang.org/x/pkgsite/internal/middleware) in `Go` application.**
+## Introduce and implement request / response interceptor [Middleware](https://pkg.go.dev/golang.org/x/pkgsite/internal/middleware) in `Go` application. ##
 
 <i>Topics Covered</i>: Add middleware (interceptor ) in a `Go` application.
 
@@ -32,7 +32,7 @@ use to log response data or details before writing to the standard Response Writ
 
 </ol>
 
-- **Integrate Redis database using [go-redis](https://github.com/redis/go-redis) package into `golang` application.**
+## Integrate Redis database using [go-redis](https://github.com/redis/go-redis) package into `golang` application. ##
 
 <i>Topics Covered</i>: Integrate `Redis Database` in a `Go` application.
 
@@ -44,7 +44,7 @@ use to log response data or details before writing to the standard Response Writ
 
 </ol>
 
-- **Incorporate [CORS middleware](https://pkg.go.dev/github.com/rs/cors) into the Golang application's HTTP REST services.**
+## Incorporate [CORS middleware](https://pkg.go.dev/github.com/rs/cors) into the Golang application's HTTP REST services. ##
 
 <i>Topics Covered</i>: Set-Up `CORS Policy` in URL shortner application.
 
@@ -55,6 +55,6 @@ use to log response data or details before writing to the standard Response Writ
 
 </ol>
 
-- **Develop a Base62 encoding system to generate distinct short URLs for each unique integer input.**
+## Develop a Base62 encoding system to generate distinct short URLs for each unique integer input. ##
 
-- **Implement a Base10 decoding mechanism to extract the original integer value from a given short URL identifier.**
+## Implement a Base10 decoding mechanism to extract the original integer value from a given short URL identifier. ##
