@@ -30,6 +30,8 @@ func SetUpRoutes(redisClient *redis.Client) *mux.Router {
 	urlsRouter.HandleFunc("/update-short-url", controllers.UpdateShortUrl(redisClient)).Methods("POST")
 	urlsRouter.HandleFunc("/delete-short-url", controllers.DeleteShortUrl(redisClient)).Methods("GET")
 
+	urlsRouter.HandleFunc("/custom-short-url", controllers.CreateCustomShortUrl(redisClient)).Methods("POST")
+
 	// test redis database operations
 	keysRouter.HandleFunc("/get-key", controllers.GetKeyFromRedis).Methods("GET")
 	keysRouter.HandleFunc("/get-all-keys", controllers.GetAllKeysFromRedis).Methods("GET")

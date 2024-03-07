@@ -296,6 +296,97 @@ func DeleteShortUrl(redisClient *redis.Client) http.HandlerFunc {
 	}
 }
 
+// Route handler to create custom short url for long url
+func CreateCustomShortUrl(redisClient *redis.Client) http.HandlerFunc {
+
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		errorCode := http.StatusInternalServerError
+		errResp := ErrorResponse{}
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		ctx := request.Context()
+
+		requestData, err := util.RequestDecoder(request)
+		if err != nil {
+			errorMsg := "Error to decode request for create custom short url"
+
+			errResp.ErrCode = errorCode
+			errResp.ErrMsg = errorMsg
+
+			SendErrResponse(writer, errResp)
+			return
+		}
+
+		log.Printf("request received to create custom short url %+v ", requestData)
+		// close request body when the function is returned
+		defer request.Body.Close()
+
+		if requestData.LongUrl == "" {
+			errResp.ErrCode = http.StatusBadRequest
+			errResp.ErrMsg = "Missing mandatory request parameter: longUrl"
+
+			log.Printf("Error invalid request %v ", errResp)
+			SendErrResponse(writer, errResp)
+			return
+		}
+
+		if !IsShortUrlExistsForLongUrl(redisClient, ctx, &requestData) {
+
+			writer.WriteHeader(http.StatusCreated)
+
+			//increment counter
+			counter := getUniqueCounterValue(redisClient, ctx)
+			if counter == 0 {
+				errResp.ErrCode = http.StatusInternalServerError
+				errResp.ErrMsg = "Internal server error"
+
+				log.Printf("Error to get unique counter %v ", errResp)
+				SendErrResponse(writer, errResp)
+				return
+			}
+
+			shortUrlId, _ := generateShortUrlId(counter)
+			base62String := requestData.ShortUrl
+			if shortUrlId != 0 {
+
+				shortUrl := "http://" + request.Host + "/" + base62String
+				requestData.ShortUrl = shortUrl
+				requestData.KeyId = shortUrlId
+				requestData.ShortUrlId = base62String
+
+				err = SaveData(redisClient, ctx, requestData)
+				if err == nil {
+					util.ResponseEncoder(writer, &requestData)
+
+				} else {
+					errResp.ErrCode = http.StatusInternalServerError
+					errResp.ErrMsg = "Internal server error"
+
+					log.Printf("Error could not save data into redis %v ", err)
+					SendErrResponse(writer, errResp)
+					return
+				}
+
+			} else {
+				errResp.ErrCode = http.StatusInternalServerError
+				errResp.ErrMsg = "Could not create custom short Url, Try after sometime "
+
+				log.Printf("Error could not create custom short url %v ", err)
+				SendErrResponse(writer, errResp)
+				return
+			}
+
+		} else {
+			writer.WriteHeader(http.StatusCreated)
+			FindByLongUrl(redisClient, ctx, &requestData)
+			util.ResponseEncoder(writer, &requestData)
+		}
+
+	}
+}
+
 // Route Handler to redirect short url to the known longUrl
 func RedirectToOriginalUrl(redisClient *redis.Client) http.HandlerFunc {
 
