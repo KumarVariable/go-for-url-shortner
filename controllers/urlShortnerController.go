@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -416,8 +417,57 @@ func RedirectToOriginalUrl(redisClient *redis.Client) http.HandlerFunc {
 				SendErrResponse(writer, errResp)
 				return
 			}
+
+			CollectClickMetrics(redisClient, ctx, payload.ShortUrlId)
+
 			http.Redirect(writer, request, payload.LongUrl, http.StatusMovedPermanently)
 		}
+	}
+}
+
+// Route Handler to get count of total clicks for a short url
+func GetClickCountScore(redisClient *redis.Client) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		writer.Header().Set("Content-Type", "application/json")
+		errResp := ErrorResponse{}
+		context := request.Context()
+
+		payload, err := util.RequestDecoder(request)
+		if err != nil {
+			errResp.ErrCode = http.StatusInternalServerError
+			errResp.ErrMsg = "Error to decode get click count request"
+
+			log.Printf("Error decoding click count request: %v ", err)
+
+			SendErrResponse(writer, errResp)
+			return
+		}
+
+		log.Printf("request received to get click count for short url %+v ", payload.ShortUrlId)
+		// close the request after function execution
+		defer request.Body.Close()
+
+		writer.WriteHeader(http.StatusOK)
+
+		shortUrlId := payload.ShortUrlId
+		score, _ := ClickCountScore(redisClient, context, shortUrlId)
+
+		scoreIntValue := int(score)
+
+		message := fmt.Sprintf("Total click count score for short url %s is %d", shortUrlId, scoreIntValue)
+
+		payload.Message = message
+
+		err = util.ResponseEncoder(writer, &payload)
+		if err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			errResp.ErrCode = http.StatusInternalServerError
+			errResp.ErrMsg = " Error to get count score "
+			SendErrResponse(writer, errResp)
+			return
+		}
+
 	}
 }
 

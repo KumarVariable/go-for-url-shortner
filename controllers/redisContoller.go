@@ -184,3 +184,28 @@ func DeleteData(redisClient *redis.Client, ctx context.Context, payload *models.
 	return nil
 
 }
+
+func CollectClickMetrics(redisClient *redis.Client, ctx context.Context, shortUrlId string) {
+
+	_, err := redisClient.ZIncrBy(ctx, "url_clicks", 1, shortUrlId).Result()
+	if err != nil {
+		log.Println("Error incrementing click count:", err)
+	} else {
+		log.Printf("Click count incremented successfully for URL %s", shortUrlId)
+	}
+}
+
+// Function to retrieve the click count (score) for the given short URL ID
+func ClickCountScore(redisClient *redis.Client, ctx context.Context, shortUrlId string) (float64, error) {
+
+	score, err := redisClient.ZScore(ctx, "url_clicks", shortUrlId).Result()
+	if err != nil {
+		log.Println("Error retrieving click count:", err)
+		return 0, err
+	} else {
+		log.Printf("Total click count for URL %s: %f\n", shortUrlId, score)
+	}
+
+	return score, nil
+
+}

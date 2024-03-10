@@ -58,3 +58,7 @@ use to log response data or details before writing to the standard Response Writ
 ## Develop a Base62 encoding system to generate distinct short URLs for each unique integer input. ##
 
 ## Implement a Base10 decoding mechanism to extract the original integer value from a given short URL identifier. ##
+
+## Implement a serive to create custom short URL. ##
+
+## Implement a simple service to get total count of clicks on a given Short URL Id. ##

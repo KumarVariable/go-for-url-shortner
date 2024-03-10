@@ -12,7 +12,7 @@ A Short URL refers to a web service that transforms a long URL into a much short
 
 <ol>
 
-<li> Easy to share and remember. </li>
+<li> Easy to share and remember. Beautify a URL</li>
 <li> Helpful to track the clicks on URLs for Analytics purposes. </li>
 <li> Helps to Beautify any Long URLs. </li>
 
@@ -20,7 +20,7 @@ A Short URL refers to a web service that transforms a long URL into a much short
 
 </p>
 
-### Requirements to create a Short URL Application? ###
+### Requirements to create a URL Shortner Application? ###
 
 <p>
 
@@ -29,6 +29,24 @@ A Short URL refers to a web service that transforms a long URL into a much short
 <li>Generate a short url with the given original url.</li>
 <li>The short url (or link) should redirect users to original url (link).</li>
 <li>Provide option to create custom short url as given by end user.</li>
+
+</ul>
+
+</p>
+
+### Design goal considered to create a URL Shortner Application? ###
+
+<p>
+
+<ul>
+
+<li>How long a tiny url would be ? Will it ever expire?</li>
+<li>The services to Create/Retreive/Update/Delete short url must be exposed as REST service.</li>
+<li>The long URL should also be uniquely identifiable from the short URL.</li>
+<li>Provide option to create a tiny url by user's choice.</li>
+<li>If user is allowed to create customer shortened links, it should be of max 7 characters.</li>
+<li>Once a shortened link is generated it should stay in system for lifetime.</li>
+<li>The Service should collect metrics like most clicked links.</li>
 
 </ul>
 
@@ -115,4 +133,41 @@ In this application, it is decided to go with random character string of length 
 
 </ul>
 
+### Data in Redis for Url Shortner Application? ###
 
+<ol>
+
+<li><i>Short Url</i>: 7 character long unique short URL.</li>
+<li><i>Original Url</i>: The original long URL.</li>
+<li><i>Counter</i>: Unique integer to create Short URL Id. Initial counter value is 100000000000</li>
+<li><i>Mapping Short URL Id and Long URL</i>: Store the details of Short URL Id and Long URL.</li>
+<li><i>Mapping Short URL Id and Click Count</i>: Store the total clicks on Short URL Id to maintain analytics.</li>
+
+</ol>
+
+### FAQs? ###
+
+<ol>
+
+<li><strong>Why initial counter value in redis is set to 100000000000 ? </strong></li>
+<p>
+
+To Ensure Minimum Length: By starting with a large initial value, we ensure that the encoded ID (short URL) has a minimum length of 7-characters from the beginning. <br/>
+
+Avoid Simple Sequences: Starting with a large number makes the generated short URLs less predictable.<br/>
+
+Collision Avoidance: If there are parallel or multiple ID generation requests then starting at a higher value could help in avoiding collisions or overlap. <br/>
+
+</p>
+
+<li><strong>Explain the Application flow for Creating Short URL ? </strong></li>
+
+<p>
+
+The service recieves a `POST` request to the `/create-short-url` endpoint.<br/>
+The service then gets a unique counter value from redis database. This value is then used to generate unique Short URL Id using `base62` algorithm. <br/>
+After storing the mapping of generated Short URL id and long URL and with all the details the service returns response to Client with all the corresponding details.
+
+</p>
+
+</ol>

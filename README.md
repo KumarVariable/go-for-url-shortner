@@ -10,9 +10,20 @@ This application provides a simple solution for shortening URLs.Developed using 
 
 This application is a learning tool to understand `golang` programming concepts.
 
+Below are the features implemented in this sample application, [Refer for more](docs/ShortURLHandbook.md):
+
+<ul>
+
+<li>Generate a short url with the given original url.</li>
+<li>The short url (or link) should redirect users to original url (link).</li>
+<li>Provide option to create custom short url as given by end user.</li>
+<li>Provide count score metrics for any given short url.</li>
+
+</ul>
+
 The REST services can be test through [cURL calls](#how-to-test-rest-services-for-url-shortner-application) or, any API Test tool.<br/>
 
-Also, a sample front-end applicatin is also written in React to get the feel for complete development for URL shortner application
+Also, a sample front-end applicatin is also written in React to get the feel for complete development for URL shortner application. [Clone From Here](https://github.com/KumarVariable/url-shortner-webapp.git)
 
 </p>
 
@@ -21,6 +32,7 @@ Also, a sample front-end applicatin is also written in React to get the feel for
 1. [Go](https://go.dev/doc/install)
 2. [Redis](https://redis.io/docs/install/install-redis/)
 3. Your Favorite IDE. I have used [Visual Studio Code Editor](https://code.visualstudio.com/download)
+4. [URL Shortner Web Application](https://github.com/KumarVariable/url-shortner-webapp.git)
 
 ## How to Run the sample `Go` Project ##
 
@@ -70,13 +82,15 @@ curl --location 'localhost:9999/key/get-all-keys'
 
 ## How To Test REST services for Url Shortner Application ##
 
-| Endpoint Url                          |   HTTP Method  |  HTTP Response    |
-|---------------------------------------|:--------------:|------------------:|
-| localhost:9999/test                   |  GET           | Server Uptime     |
-| localhost:9999/urls/get-short-url     |  GET           | Get short url     |
-| localhost:9999/urls/create-short-url  |  POST          | Create short url  |
-| localhost:9999/urls/update-short-url  |  POST          | Update short url  |
-| localhost:9999/urls/delete-short-url  |  GET           | Delete short url  |
+| Endpoint Url                          |   HTTP Method  |  HTTP Response                |
+|---------------------------------------|:--------------:|------------------------------:|
+| localhost:9999/test                   |  GET           | Server Uptime                 |
+| localhost:9999/urls/get-short-url     |  GET           | Get short url                 |
+| localhost:9999/urls/create-short-url  |  POST          | Create short url              |
+| localhost:9999/urls/update-short-url  |  POST          | Update short url              |
+| localhost:9999/urls/delete-short-url  |  GET           | Delete short url              |
+| localhost:9999/urls/custom-short-url  |  POST          | Create Custom short url       |
+| localhost:9999/urls/get-click-count   |  POST          | Total Clicks For a short url  |
 
 Sample cuRL calls:
 
@@ -111,6 +125,27 @@ curl --location 'http://localhost:9999/urls/update-short-url' \
 ```text
 curl --location --request GET 'http://localhost:9999/urls/delete-short-url?longUrl=https%3A%2F%2Fgo.dev%2Fdoc%2Ftutorial%2Fgetting-started%23code' \
 --header 'Content-Type: application/json'
+```
+
+5. Create Custom Short Url
+
+```text
+curl --location 'http://127.0.0.1:9999/urls/custom-short-url' \
+--header 'Content-Type: application/json' \
+--data '{
+    "longUrl":"https://training.linuxfoundation.org/",
+    "shortUrl":"1L9zOa2"
+}'
+```
+
+6. Get Total Count of Clicks for a Short Url
+
+```text
+curl --location 'localhost:9999/urls/get-click-count' \
+--header 'Content-Type: application/json' \
+--data '{
+    "shortUrlId": "1L9zO9P"
+}'
 ```
 
 ## Basic Go Commands ##
